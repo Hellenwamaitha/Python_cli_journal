@@ -123,11 +123,9 @@ Contributions to My Journal App are welcome! If you'd like to contribute, please
     Create a pull request to the main repository.
 
 Please ensure your code follows good coding practices and includes proper documentation.
+
 License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License. Hellen WAmaitha. 2023
+See the LICENSE file for details.
 
-vbnet
-
-
-In this updated README file, each section has an anchor link associated with it, and the table of contents links to these sections. Users can click on the TOC links to navigate directly to the relevant sections in your document.
