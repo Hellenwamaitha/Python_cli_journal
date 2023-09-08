@@ -6,6 +6,21 @@ from Mycli.models import JournalEntry, User, Tag
 engine = create_engine('sqlite:///my_journal_app_new.db')
 Session = sessionmaker(bind=engine)
 
+def create_user():
+    username = input("Enter a username for the new user: ")
+
+    with Session() as session:
+        # Check if the username already exists
+        existing_user = session.query(User).filter_by(username=username).first()
+
+        if existing_user:
+            print("User with that username already exists.")
+        else:
+            new_user = User(username=username)
+            session.add(new_user)
+            session.commit()
+            print(f"User '{username}' created successfully!")
+
 def display_entries():
     # Create a session
     with Session() as session:
@@ -31,23 +46,19 @@ def create_entry():
     title = input("Enter the title for your new entry: ")
     content = input("Enter the content for your new entry: ")
 
-    # Collect user information (optional)
-    author_username = input("Enter your username (if you want to associate this entry with yourself): ")
+    # Collect user information
+    author_username = input("Enter your username (to associate this entry with yourself): ")
 
-    # Collect tags (optional)
-    tags_input = input("Enter tags for the entry (comma-separated): ")
-    tags = [tag.strip() for tag in tags_input.split(",")]
-
-    # Create a new journal entry and add it to the database
     with Session() as session:
-        user = None  # Initialize user as None
+        user = session.query(User).filter_by(username=author_username).first()
 
-        # If author_username is provided, attempt to find the user
-        if author_username:
-            user = session.query(User).filter_by(username=author_username).first()
+        if user is None:
+            print(f"User with username '{author_username}' not found. Please create the user first.")
+            return
 
-            if user is None:
-                print(f"User with username '{author_username}' not found. The entry won't be associated with a user.")
+        # Collect tags (optional)
+        tags_input = input("Enter tags for the entry (comma-separated): ")
+        tags = [tag.strip() for tag in tags_input.split(",")]
 
         new_entry = JournalEntry(title=title, content=content, user=user)
 
@@ -105,7 +116,8 @@ def main():
         print("2. Create a New Entry")
         print("3. Delete a Journal Entry")
         print("4. Search for a Journal Entry")
-        print("5. Quit")
+        print("5. Create a New User")  # Option to create users
+        print("6. Quit")
 
         choice = input("Enter your choice: ")
 
@@ -118,6 +130,8 @@ def main():
         elif choice == "4":
             search_entries()
         elif choice == "5":
+            create_user()  
+        elif choice == "6":
             print("Goodbye!")
             break
         else:
